@@ -1,2 +1,5 @@
+import constants
+from commands import bot
+
 if __name__ == '__main__':
-    pass
+    bot.run(constants.TOKEN)
