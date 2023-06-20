@@ -1,0 +1,3 @@
+# discord bot token
+TOKEN = 'MTEyMDM1NTQ0MzAzNDgyMDY0OA.Gr1EV_.9LHuN2ZE_GCPbd1c_Z-uTL2UlwF4BYN7V-fDvM'
+
