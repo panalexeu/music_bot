@@ -5,8 +5,6 @@ import utils
 
 
 class MusicCommands(commands.Cog):
-    """Basic music commands"""
-
     def __init__(self, bot):
         self.bot = bot
 
@@ -29,6 +27,7 @@ class MusicCommands(commands.Cog):
             await ctx.send(e.__str__())
         except AttributeError as e:
             error_msg = e.__str__()
+
             if error_msg == "'NoneType' object has no attribute 'channel'":
                 await ctx.send(f'User **{user.name}** is not connected to any voice channel.')
             elif error_msg == "'NoneType' object has no attribute 'play'":
