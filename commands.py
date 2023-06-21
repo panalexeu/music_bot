@@ -1,10 +1,8 @@
-import asyncio
-
 import discord
 from discord.ext import commands
 
 import constants
-import youtube
+import music
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
@@ -19,11 +17,37 @@ async def play(ctx, url: str):
         await user.voice.channel.connect()
 
         async with ctx.typing():
-            filename = await youtube.YTDLSource.from_url(url, loop=bot.loop)
-            ctx.message.guild.voice_client.play(
-                discord.FFmpegPCMAudio(executable=constants.FFMPEG_PATH, source=filename))
+            player = await music.YTDLSource.from_url(url, loop=bot.loop, stream=True)
+            ctx.message.guild.voice_client.play(player)
+
+        await ctx.send(f'Now playing: **{player.title}**')
 
     except discord.ClientException as e:
         await ctx.send(e.__str__())
     except AttributeError:
-        await ctx.send(f'User **{user.name}** is not connected to any voice channel')
+        await ctx.send(f'User **{user.name}** is not connected to any voice channel.')
+
+
+@bot.command()
+async def pause(ctx):
+    try:
+        await ctx.message.guild.voice_client.pause()
+    except AttributeError:
+        await ctx.send('Bot is not connected to any voice channel.')
+
+
+@bot.command()
+async def resume(ctx):
+    try:
+        await ctx.message.guild.voice_client.resume()
+    except AttributeError:
+        await ctx.send('Bot is not connected to any voice channel.')
+
+
+@bot.command()
+async def stop(ctx):
+    try:
+        await ctx.message.guild.voice_client.stop()
+        await ctx.message.guild.voice_client.disconnect()
+    except AttributeError:
+        await ctx.send('Bot is not connected to any voice channel.')

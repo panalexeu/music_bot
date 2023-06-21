@@ -13,7 +13,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         super().__init__(source, volume)
         self.data = data
         self.title = data.get('title')
-        self.url = ''
+        self.url = data.get('url')
 
     @classmethod
     async def from_url(cls, url, *, loop=None, stream=False):
@@ -23,6 +23,9 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if 'entries' in data:
             data = data['entries'][0]
 
-        filename = data['title'] if stream else ytdl.prepare_filename(data)
+        filename = data['url'] if stream else ytdl.prepare_filename(data)
 
-        return filename
+        return cls(
+            discord.FFmpegPCMAudio(executable=constants.FFMPEG_PATH, source=filename, options=constants.FFMPEG_OPTIONS),
+            data=data
+        )

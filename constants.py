@@ -11,7 +11,7 @@ YTDL_FORMAT_OPTIONS = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
+    'source_address': '0.0.0.0'  # bind to ipv4 since ipv6 addresses cause issues sometimes
 }
 
 FFMPEG_PATH = 'ffmpeg/ffmpeg-2023-06-19-git-1617d1a752-full_build/bin/ffmpeg.exe'
