@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import constants
+import info_commands
 import music_commands
 
 intents = discord.Intents.all()
@@ -12,6 +13,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 @bot.event
 async def on_ready():
     await bot.add_cog(music_commands.MusicCommands(bot))
+    await bot.add_cog(info_commands.InfoCommands())
 
 if __name__ == '__main__':
     bot.run(constants.TOKEN)

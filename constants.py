@@ -19,3 +19,5 @@ FFMPEG_PATH = 'ffmpeg/ffmpeg-2023-06-19-git-1617d1a752-full_build/bin/ffmpeg.exe
 FFMPEG_OPTIONS = {
     'options': '-vn'
 }
+
+LOGO_URL = 'https://upload.wikimedia.org/wikipedia/en/0/05/Mug_root_beer_logo.png'
