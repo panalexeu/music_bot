@@ -1,12 +1,14 @@
 import discord
 from discord.ext import commands
 
+import databse
 import utils
 
 
 class MusicCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.db = databse.Database()
 
     @commands.command()
     async def play(self, ctx, url: str):
@@ -18,6 +20,9 @@ class MusicCommands(commands.Cog):
             await user.voice.channel.connect()
 
             async with ctx.typing():
+                self.db.increment_times_played()
+                self.db.increment_amount_of_commands_used()
+
                 player = await utils.YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player)
 
@@ -27,7 +32,6 @@ class MusicCommands(commands.Cog):
             await ctx.send(e.__str__())
         except AttributeError as e:
             error_msg = e.__str__()
-
             if error_msg == "'NoneType' object has no attribute 'channel'":
                 await ctx.send(f'User **{user.name}** is not connected to any voice channel.')
             elif error_msg == "'NoneType' object has no attribute 'play'":
@@ -38,6 +42,8 @@ class MusicCommands(commands.Cog):
         """Pauses a playing song"""
 
         try:
+            self.db.increment_amount_of_commands_used()
+
             ctx.voice_client.pause()
             await ctx.send(f'Song paused.')
         except AttributeError:
@@ -48,6 +54,8 @@ class MusicCommands(commands.Cog):
         """Resumes a playing song"""
 
         try:
+            self.db.increment_amount_of_commands_used()
+
             ctx.voice_client.resume()
             await ctx.send(f'Song resumed.')
         except AttributeError:
@@ -58,6 +66,8 @@ class MusicCommands(commands.Cog):
         """Stops a playing song"""
 
         try:
+            self.db.increment_amount_of_commands_used()
+
             ctx.voice_client.stop()
             await ctx.voice_client.disconnect()
             await ctx.send(f'Song stopped.')

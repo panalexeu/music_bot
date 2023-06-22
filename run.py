@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import constants
+import databse
 import info_commands
 import music_commands
 
@@ -16,4 +17,5 @@ async def on_ready():
     await bot.add_cog(info_commands.InfoCommands())
 
 if __name__ == '__main__':
+    databse.Database().initialize()
     bot.run(constants.TOKEN)
