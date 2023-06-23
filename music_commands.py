@@ -12,7 +12,6 @@ class MusicCommands(commands.Cog):
         self.queue = []
         self.db = databse.Database()
 
-    # Basic commands
     @commands.command()
     async def play(self, ctx, url: str):
         """Plays a song from yt from the given url"""
@@ -87,47 +86,3 @@ class MusicCommands(commands.Cog):
             await ctx.send(f'Song stopped.')
         except AttributeError:
             await ctx.send('Bot is not connected to any voice channel.')
-
-    # Queue commands
-    @commands.command()
-    async def q_play(self, ctx):
-        if len(self.queue) == 0:
-            await ctx.send('Queue is empty')
-            return
-
-        # player = await utils.YTDLSource.from_url(self.queue[0], loop=self.bot.loop, stream=True)
-        # ctx.voice_client.play(player)
-
-    @commands.command()
-    async def q_add(self, ctx, url):
-        self.queue.append(url)
-        await ctx.send('Entry was added to the queue.')
-
-    @q_add.error
-    async def q_add_error(self, ctx, error):
-        if isinstance(error, errors.MissingRequiredArgument):
-            await ctx.send('A required argument is missing. Please provide the URL.')
-
-    @commands.command()
-    async def q_clear(self, ctx):
-        self.queue.clear()
-        await ctx.send('Queue was cleared.')
-
-    @commands.command()
-    async def q_show(self, ctx):
-        queue_embed = discord.Embed(
-            title='Queue list',
-            color=discord.Color.red(),
-        )
-
-        async with ctx.typing():
-            value = ''
-            for entry in self.queue:
-                value += f'* {entry}\n'
-
-            queue_embed.add_field(
-                name='Current queue list:',
-                value=value
-            )
-
-            await ctx.send(embed=queue_embed)
