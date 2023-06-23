@@ -11,7 +11,7 @@ import utils
 class QueueCommands(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.queue = []
+        self.queue = {}
         self.db = databse.Database()
 
     @commands.command()
@@ -19,9 +19,13 @@ class QueueCommands(commands.Cog):
         """PLays songs/videos from queue list"""
 
         # Is empty check if so ending the function
-        if len(self.queue) == 0:
+        if not await self.is_queue_exist(ctx):
             await ctx.send('Queue is empty.')
             return
+        else:
+            if len(self.queue[ctx.guild.id]) == 0:
+                await ctx.send('Queue is empty.')
+                return
 
         # Joining to vc handling
         user = ctx.message.author
@@ -33,12 +37,13 @@ class QueueCommands(commands.Cog):
         except discord.ClientException:
             pass
 
-        while len(self.queue) > 0:
+        server_queue = self.queue[ctx.guild.id]
+        while len(server_queue) > 0:
             try:
                 # Incrementing values in stats db
                 self.db.increment_times_played()
 
-                player = await utils.YTDLSource.from_url(self.queue.pop(0), loop=self.bot.loop, stream=True)
+                player = await utils.YTDLSource.from_url(server_queue.pop(0), loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player)
 
                 await ctx.send(f'Now playing: **{player.title}**')
@@ -52,7 +57,7 @@ class QueueCommands(commands.Cog):
     async def q_add(self, ctx, url):
         """Adds a song/video url to queue list"""
 
-        self.queue.append(url)
+        self.queue[ctx.guild.id] = url
         await ctx.send('Entry was added to the queue.')
 
     @q_add.error
@@ -64,21 +69,29 @@ class QueueCommands(commands.Cog):
     async def q_clear(self, ctx):
         """Clears queue list"""
 
-        self.queue.clear()
+        if not await self.is_queue_exist(ctx):
+            await ctx.send('Queue is empty.')
+            return
+
+        self.queue[ctx.guild.id].clear()
         await ctx.send('Queue was cleared.')
 
     @commands.command()
     async def q_list(self, ctx):
         """Shows queue list"""
 
+        if not await self.is_queue_exist(ctx):
+            await ctx.send('Queue is empty.')
+            return
+
         queue_embed = discord.Embed(
-            title='Queue list',
+            title=f'{ctx.guild.name} queue list',
             color=discord.Color.red(),
         )
 
         async with ctx.typing():
             value = ''
-            for entry in self.queue:
+            for entry in self.queue[ctx.guild.id]:
                 value += f'* {entry} **|** requested by: **{ctx.message.author.name}** **|**\n'
 
             queue_embed.add_field(
@@ -87,3 +100,6 @@ class QueueCommands(commands.Cog):
             )
 
             await ctx.send(embed=queue_embed)
+
+    async def is_queue_exist(self, ctx):
+        return ctx.guild.id in self.queue

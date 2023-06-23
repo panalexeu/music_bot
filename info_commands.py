@@ -20,6 +20,11 @@ class InfoCommands(commands.Cog):
         )
 
         info_embed.add_field(
+            name='Supported urls',
+            value='Bot supports youtube links **only**.',
+            inline=False
+        )
+        info_embed.add_field(
             name='Commands syntax',
             value='To use commands follow this syntax: **!command_name** (!play, !resume, !pause, etc.)',
             inline=False
@@ -57,7 +62,7 @@ class InfoCommands(commands.Cog):
         )
 
         stats_embed.add_field(
-            name='Amount of songs/videos played:',
+            name='Amount of songs/videos played (**globally**):',
             value=self.db.get_times_played(),
             inline=True
         )
