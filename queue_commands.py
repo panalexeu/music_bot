@@ -22,10 +22,9 @@ class QueueCommands(commands.Cog):
         if not await self.is_queue_exist(ctx):
             await ctx.send('Queue is empty.')
             return
-        else:
-            if len(self.queue[ctx.guild.id]) == 0:
-                await ctx.send('Queue is empty.')
-                return
+        elif len(self.queue[ctx.guild.id]) == 0:
+            await ctx.send('Queue is empty.')
+            return
 
         # Joining to vc handling
         user = ctx.message.author
@@ -72,7 +71,11 @@ class QueueCommands(commands.Cog):
     async def q_clear(self, ctx):
         """Clears queue list"""
 
+        # Is empty check if so ending the function
         if not await self.is_queue_exist(ctx):
+            await ctx.send('Queue is empty.')
+            return
+        elif len(self.queue[ctx.guild.id]) == 0:
             await ctx.send('Queue is empty.')
             return
 
