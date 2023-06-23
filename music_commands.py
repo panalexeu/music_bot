@@ -31,7 +31,6 @@ class MusicCommands(commands.Cog):
             async with ctx.typing():
                 # Incrementing values in stats db
                 self.db.increment_times_played()
-                self.db.increment_amount_of_commands_used()
 
                 player = await utils.YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player)
@@ -52,9 +51,6 @@ class MusicCommands(commands.Cog):
         """Pauses a playing song"""
 
         try:
-            # Incrementing values in stats db
-            self.db.increment_amount_of_commands_used()
-
             ctx.voice_client.pause()
             await ctx.send(f'Song paused.')
         except AttributeError:
@@ -65,9 +61,6 @@ class MusicCommands(commands.Cog):
         """Resumes a playing song"""
 
         try:
-            # Incrementing values in stats db
-            self.db.increment_amount_of_commands_used()
-
             ctx.voice_client.resume()
             await ctx.send(f'Song resumed.')
         except AttributeError:
@@ -78,9 +71,6 @@ class MusicCommands(commands.Cog):
         """Stops a playing song"""
 
         try:
-            # Incrementing values in stats db
-            self.db.increment_amount_of_commands_used()
-
             ctx.voice_client.stop()
             await ctx.voice_client.disconnect()
             await ctx.send(f'Song stopped.')

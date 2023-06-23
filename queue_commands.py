@@ -32,8 +32,12 @@ class QueueCommands(commands.Cog):
             pass
 
         while len(self.queue) > 0:
+            # Incrementing values in stats db
+            self.db.increment_times_played()
+
             player = await utils.YTDLSource.from_url(self.queue.pop(0), loop=self.bot.loop, stream=True)
             ctx.voice_client.play(player)
+
             await ctx.send(f'Now playing: **{player.title}**')
             await asyncio.sleep(player.data.get('duration'))  # duration is in seconds
 

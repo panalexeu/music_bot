@@ -35,8 +35,6 @@ class InfoCommands(commands.Cog):
             inline=False
         )
 
-        self.db.increment_amount_of_commands_used()
-
         await ctx.send(embed=info_embed)
 
     @commands.command()
@@ -49,17 +47,10 @@ class InfoCommands(commands.Cog):
         )
 
         stats_embed.add_field(
-            name='Times played:',
+            name='Amount of songs/videos played:',
             value=self.db.get_times_played(),
-            inline=True
-        )
-        stats_embed.add_field(
-            name='Amount of commands used:',
-            value=self.db.get_amount_of_commands_used(),
             inline=True
         )
 
         async with ctx.typing():
-            self.db.increment_amount_of_commands_used()
-
             await ctx.send(embed=stats_embed)

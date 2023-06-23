@@ -7,30 +7,20 @@ class Database:
 
     STATS_TABLE = '''
         CREATE TABLE stats(
-            times_played INTEGER DEFAULT 0,
-            amount_of_commands_used INTEGER DEFAULT 0
+            times_played INTEGER DEFAULT 0
         )
     '''
 
-    INIT_VALUES = 'INSERT INTO stats VALUES(0, 0)'
+    INIT_VALUES = 'INSERT INTO stats VALUES(0)'
 
     INCREMENT_TIMES_PLAYED = 'UPDATE stats SET times_played = times_played + 1'
     SELECT_TIMES_PLAYED = 'SELECT times_played FROM stats'
-
-    INCREMENT_AMOUNT_OF_COMMAND_USED = 'UPDATE stats SET amount_of_commands_used = amount_of_commands_used + 1'
-    SELECT_AMOUNT_OF_COMMAND_USED = 'SELECT amount_of_commands_used FROM stats'
 
     def increment_times_played(self):
         return self.run_query(self.INCREMENT_TIMES_PLAYED, commit=True)
 
     def get_times_played(self):
         return self.run_query(self.SELECT_TIMES_PLAYED, fetch=True)
-
-    def increment_amount_of_commands_used(self):
-        return self.run_query(self.INCREMENT_AMOUNT_OF_COMMAND_USED, commit=True)
-
-    def get_amount_of_commands_used(self):
-        return self.run_query(self.SELECT_AMOUNT_OF_COMMAND_USED, fetch=True)
 
     def run_query(self, query, commit=False, fetch=False):
         with self.get_connection() as connection:
