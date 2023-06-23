@@ -19,10 +19,7 @@ class QueueCommands(commands.Cog):
         """PLays songs/videos from queue list"""
 
         # Is empty check if so ending the function
-        if not await self.is_queue_exist(ctx):
-            await ctx.send('Queue is empty.')
-            return
-        elif len(self.queue[ctx.guild.id]) == 0:
+        if not await self.is_queue_exist(ctx) or len(self.queue[ctx.guild.id]) == 0:
             await ctx.send('Queue is empty.')
             return
 
@@ -72,10 +69,7 @@ class QueueCommands(commands.Cog):
         """Clears queue list"""
 
         # Is empty check if so ending the function
-        if not await self.is_queue_exist(ctx):
-            await ctx.send('Queue is empty.')
-            return
-        elif len(self.queue[ctx.guild.id]) == 0:
+        if not await self.is_queue_exist(ctx) or len(self.queue[ctx.guild.id]) == 0:
             await ctx.send('Queue is empty.')
             return
 
