@@ -14,7 +14,7 @@ class MusicCommands(commands.Cog):
 
     @commands.command()
     async def play(self, ctx, url: str):
-        """Plays a song from yt from the given url"""
+        """Plays a song/video from yt from the given url"""
 
         # Joining to vc handling
         user = ctx.message.author
@@ -35,7 +35,8 @@ class MusicCommands(commands.Cog):
                 player = await utils.YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
                 ctx.voice_client.play(player)
 
-            await ctx.send(f'Now playing: **{player.title}**')
+                await ctx.send(f'Now playing: **{player.title}**')
+
         except (discord.ClientException, errors.MissingRequiredArgument) as e:
             await ctx.send(e.__str__())
         except AttributeError:
@@ -48,7 +49,7 @@ class MusicCommands(commands.Cog):
 
     @commands.command()
     async def pause(self, ctx):
-        """Pauses a playing song"""
+        """Pauses a playing song/video"""
 
         try:
             ctx.voice_client.pause()
@@ -58,7 +59,7 @@ class MusicCommands(commands.Cog):
 
     @commands.command()
     async def resume(self, ctx):
-        """Resumes a playing song"""
+        """Resumes a playing song/video"""
 
         try:
             ctx.voice_client.resume()
@@ -68,7 +69,7 @@ class MusicCommands(commands.Cog):
 
     @commands.command()
     async def stop(self, ctx):
-        """Stops a playing song"""
+        """Stops a playing song/video"""
 
         try:
             ctx.voice_client.stop()

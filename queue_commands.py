@@ -16,9 +16,11 @@ class QueueCommands(commands.Cog):
 
     @commands.command()
     async def q_play(self, ctx):
+        """PLays songs/videos from queue list"""
+
         # Is empty check if so ending the function
         if len(self.queue) == 0:
-            await ctx.send('Queue is empty')
+            await ctx.send('Queue is empty.')
             return
 
         # Joining to vc handling
@@ -32,17 +34,24 @@ class QueueCommands(commands.Cog):
             pass
 
         while len(self.queue) > 0:
-            # Incrementing values in stats db
-            self.db.increment_times_played()
+            try:
+                # Incrementing values in stats db
+                self.db.increment_times_played()
 
-            player = await utils.YTDLSource.from_url(self.queue.pop(0), loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player)
+                player = await utils.YTDLSource.from_url(self.queue.pop(0), loop=self.bot.loop, stream=True)
+                ctx.voice_client.play(player)
 
-            await ctx.send(f'Now playing: **{player.title}**')
-            await asyncio.sleep(player.data.get('duration'))  # duration is in seconds
+                await ctx.send(f'Now playing: **{player.title}**')
+                await asyncio.sleep(player.data.get('duration'))  # duration is in seconds
+
+            except discord.ClientException as e:
+                await ctx.send(e.__str__())
+                return
 
     @commands.command()
     async def q_add(self, ctx, url):
+        """Adds a song/video url to queue list"""
+
         self.queue.append(url)
         await ctx.send('Entry was added to the queue.')
 
@@ -53,11 +62,15 @@ class QueueCommands(commands.Cog):
 
     @commands.command()
     async def q_clear(self, ctx):
+        """Clears queue list"""
+
         self.queue.clear()
         await ctx.send('Queue was cleared.')
 
     @commands.command()
     async def q_list(self, ctx):
+        """Shows queue list"""
+
         queue_embed = discord.Embed(
             title='Queue list',
             color=discord.Color.red(),
@@ -66,7 +79,7 @@ class QueueCommands(commands.Cog):
         async with ctx.typing():
             value = ''
             for entry in self.queue:
-                value += f'* {entry}\n'
+                value += f'* {entry} **|** requested by: **{ctx.message.author.name}** **|**\n'
 
             queue_embed.add_field(
                 name='Current queue list:',

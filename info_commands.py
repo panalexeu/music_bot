@@ -25,8 +25,18 @@ class InfoCommands(commands.Cog):
             inline=False
         )
         info_embed.add_field(
-            name='Supported commands list',
-            value='* !info\n* !play\n* !resume\n* !pause\n* !stop\n* !help',
+            name='Supported commands list (to learn more about commands type **!help**):',
+            value='* !info\n'
+                  '* !stats\n'
+                  '* !play\n'
+                  '* !resume\n'
+                  '* !pause\n'
+                  '* !stop\n'
+                  '* !q_add\n'
+                  '* !q_clear\n'
+                  '* !q_list\n'
+                  '* !q_play\n'
+                  '* !help',
             inline=False
         )
         info_embed.add_field(
