@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 from discord.ext.commands import errors
@@ -14,6 +16,7 @@ class QueueCommands(commands.Cog):
 
     @commands.command()
     async def q_play(self, ctx):
+        # Is empty check if so ending the function
         if len(self.queue) == 0:
             await ctx.send('Queue is empty')
             return
@@ -28,13 +31,11 @@ class QueueCommands(commands.Cog):
         except discord.ClientException:
             pass
 
-        index = 0
         while len(self.queue) > 0:
-            try:
-                player = await utils.YTDLSource.from_url(self.queue.pop(index), loop=self.bot.loop, stream=True)
-                ctx.voice_client.play(player)
-            except:
-                pass
+            player = await utils.YTDLSource.from_url(self.queue.pop(0), loop=self.bot.loop, stream=True)
+            ctx.voice_client.play(player)
+            await ctx.send(f'Now playing: **{player.title}**')
+            await asyncio.sleep(player.data.get('duration'))  # duration is in seconds
 
     @commands.command()
     async def q_add(self, ctx, url):
