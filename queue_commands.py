@@ -57,7 +57,10 @@ class QueueCommands(commands.Cog):
     async def q_add(self, ctx, url):
         """Adds a song/video url to queue list"""
 
-        self.queue[ctx.guild.id] = url
+        if not await self.is_queue_exist(ctx):
+            self.queue[ctx.guild.id] = []  # if query doesn't exist in the guild we create a new one with empty list
+
+        self.queue[ctx.guild.id].append(url)
         await ctx.send('Entry was added to the queue.')
 
     @q_add.error
@@ -90,6 +93,7 @@ class QueueCommands(commands.Cog):
         )
 
         async with ctx.typing():
+            # Parsing the values of requested songs so they look good
             value = ''
             for entry in self.queue[ctx.guild.id]:
                 value += f'* {entry} **|** requested by: **{ctx.message.author.name}** **|**\n'
