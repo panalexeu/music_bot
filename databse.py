@@ -9,7 +9,7 @@ class Database:
         CREATE TABLE stats(
             times_played INTEGER DEFAULT 0,
             amount_of_commands_used INTEGER DEFAULT 0
-        );
+        )
     '''
 
     INIT_VALUES = 'INSERT INTO stats VALUES(0, 0)'

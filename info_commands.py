@@ -49,12 +49,12 @@ class InfoCommands(commands.Cog):
         )
 
         stats_embed.add_field(
-            name='Times played',
+            name='Times played:',
             value=self.db.get_times_played(),
             inline=True
         )
         stats_embed.add_field(
-            name='Amount of commands used',
+            name='Amount of commands used:',
             value=self.db.get_amount_of_commands_used(),
             inline=True
         )
